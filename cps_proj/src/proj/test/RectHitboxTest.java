@@ -64,6 +64,19 @@ public class RectHitboxTest {
 	}
 	
 	@Test
+	public void postmoveToPos(){
+		try{
+			rh.init(10, 2,3,4);
+			rh.MoveTo(6, 9);
+			
+		}catch(PostconditionError e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+	}
+	
+	@Test
 	public void testpostInitPos(){
 		try{
 			rh.init(10, 2,3,4);

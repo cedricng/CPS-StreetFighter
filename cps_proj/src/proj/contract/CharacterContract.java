@@ -23,11 +23,11 @@ public class CharacterContract extends CharacterDecorator {
 
 		//inv:getPositionY()>=0 && getPositionY()<=getEngine().getHeight()
 		if(!(getPositionY()>=0 && getPositionY()<=getEngine().getHeight())){
-			throw new InvariantError("getPositionY()>=0 && getPositionY()<=getEngine().getHeight()");
+			throw new InvariantError("getPositionY()>=0 && getPositionY()<=getEngine().getHeight() "+getPositionY()+"");
 		}
 
 		//inv:(isDead())==(getLife()!=0)
-		if(!( isDead() == (getLife()==0) )){
+		if(!( isDead() == (getLife()<=0) )){
 			throw new InvariantError("(isDead())==(getLife()!=0)");
 		}
 
@@ -144,18 +144,34 @@ public class CharacterContract extends CharacterDecorator {
 		boolean faceRight_at_pre=faceRight();
 		int positionY_at_pre= getPositionY();
 		RectHitbox charbox_at_pre=new RectHitboxContract(new RectHitboxImpl());
-		charbox_at_pre.init(getCharBox().getPositionX(), getCharBox().getPositionY(), ((RectHitbox)getCharBox()).getHeight(),((RectHitbox)getCharBox()).getWidth() );
+		charbox_at_pre.init(getCharBox().getPositionX(),
+				getCharBox().getPositionY(), 
+				((RectHitbox)getCharBox()).getHeight(),
+				((RectHitbox)getCharBox()).getWidth() );
 		boolean isTeching_at_pre=isTeching();
+		boolean isHitStunned_at_pre=isHitStunned();
+		boolean isBlockStunned_at_pre=isBlockStunned();
+		int getHeight_at_pre=getHeight();
+		int getInitHeight_at_pre=getInitHeight();
 		//traitement
 		super.step(c);
 
 		//post-inv
 		checkInvariant();
 
-		postStep(positionX_at_pre, positionY_at_pre, faceRight_at_pre, c,charbox_at_pre,isTeching_at_pre);
+		postStep(positionX_at_pre, positionY_at_pre, 
+				faceRight_at_pre, c,
+				charbox_at_pre,
+				isTeching_at_pre,
+				isHitStunned_at_pre,
+				isBlockStunned_at_pre,getHeight_at_pre,
+				getInitHeight_at_pre);
 
 	}
-	public void postMoveLeft(int positionX_at_pre, int positionY_at_pre,boolean faceRight_at_pre, RectHitbox charbox_at_pre){
+	public void postMoveLeft(int positionX_at_pre, 
+			int positionY_at_pre,
+			boolean faceRight_at_pre, 
+			RectHitbox charbox_at_pre){
 		//post: exists i getEngine()@pre.getPlayer(i) != this && getCharBox().collidesWith(getPlayer(i).getCharBox)
 		//=>getPositionX()@pre=getPositionX()
 		if(getNum()==2){
@@ -335,7 +351,15 @@ public class CharacterContract extends CharacterDecorator {
 		}
 	}
 
-	public void postStep(int positionX_at_pre, int positionY_at_pre, boolean faceRight_at_pre, Commande c,RectHitbox charbox_at_pre,boolean isTeching_at_pre){
+	public void postStep(int positionX_at_pre, 
+			int positionY_at_pre, 
+			boolean faceRight_at_pre, Commande c,
+			RectHitbox charbox_at_pre,
+			boolean isTeching_at_pre,
+			boolean isHitStunned_at_pre,
+			boolean isBlockStunned_at_pre, 
+			int getHeight_at_pre,
+			int getInitHeight_at_pre){
 		//post: :!isTeching()=>step(Commande.LEFT)=moveLeft() && step(Commande.LEFT)=>isBlocking()=false
 		if(!isTeching_at_pre){
 			if(c==Commande.LEFT){
@@ -356,7 +380,7 @@ public class CharacterContract extends CharacterDecorator {
 			}
 		}
 		//post:!isBlockStunned()=>step(Commande.NEUTRAL)=>isBlocking()=false
-		if(!isBlockStunned()){
+		if(!isBlockStunned_at_pre){
 		if(c==Commande.NEUTRAL){
 			if(!isBlocking()==false){
 				throw new PostconditionError("step(Commande.NEUTRAL)=>isBlocking()=false");
@@ -366,7 +390,7 @@ public class CharacterContract extends CharacterDecorator {
 		}
 
 		//post:!isTeching&& !isHitStunned=> step(Commande.GUARD)=>isBlocking()==true
-		if(!isTeching_at_pre && !isHitStunned())
+		if(!isTeching_at_pre && !isHitStunned_at_pre)
 		if(c==Commande.GUARD){
 			if(!isBlocking()==true){
 				throw new PostconditionError("step(Commande.GUARD)=>isBlocking()=true");
@@ -378,6 +402,15 @@ public class CharacterContract extends CharacterDecorator {
 		if(!isTeching_at_pre){
 			if(c==Commande.PUNCH){
 				if(!isTeching()){
+					throw new PostconditionError("isTeching()");
+				}
+			}
+		}
+		
+		//post:isTeching&& !isHitStunned && !isBlockStunned=>c=Commande.DOWN=>getHeight=getHeight@pre/2
+		if(!isTeching_at_pre &&! isBlockStunned_at_pre &&!isHitStunned_at_pre){
+			if(c==Commande.DOWN){
+				if(getHeight()!=getHeight_at_pre/2){
 					throw new PostconditionError("isTeching()");
 				}
 			}

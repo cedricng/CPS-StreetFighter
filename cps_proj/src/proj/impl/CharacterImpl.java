@@ -29,6 +29,7 @@ public class CharacterImpl implements Character {
 	private int tstun;
 	private boolean bstun;
 	private boolean hstun;
+	private int init_height;
 	@Override
 	public int getPositionX() {
 
@@ -93,6 +94,7 @@ public class CharacterImpl implements Character {
 		rframe=0;
 		hframe=0;
 		tstun=0;
+		init_height=100;
 		if(f){
 			opp=e.getChar(2);
 			num=1;
@@ -226,6 +228,9 @@ public class CharacterImpl implements Character {
 					System.out.println("case punch");
 					startTech(new Punch());
 					break;
+				case DOWN:
+					hb.resize(init_height/2, getWidth());
+					break;
 				default:
 					break;
 				}
@@ -324,6 +329,11 @@ public class CharacterImpl implements Character {
 	@Override
 	public boolean isHitStunned() {
 		return hstun;
+	}
+
+	@Override
+	public int getInitHeight() {
+		return init_height;
 	}
 
 }

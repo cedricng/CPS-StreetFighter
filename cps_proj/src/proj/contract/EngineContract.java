@@ -107,6 +107,16 @@ public class EngineContract extends EngineDecorator {
 				((RectHitbox)getChar(2).getCharBox()).getHeight(), ((RectHitbox)getChar(2).getCharBox()).getWidth());
 		boolean isTeching_at_pre1=getChar(1).isTeching();
 		boolean isTeching_at_pre2=getChar(2).isTeching();
+		boolean isHitStunned_at_pre1=getChar(1).isHitStunned();
+		boolean isHitStunned_at_pre2=getChar(2).isHitStunned();
+		boolean isBlockStunned_at_pre1=getChar(1).isBlockStunned();
+		boolean isBlockStunned_at_pre2=getChar(2).isBlockStunned();
+		int getHeight_at_pre1=getChar(1).getHeight();
+		int getHeight_at_pre2=getChar(2).getHeight();
+		int getInitHeight_at_pre1=getChar(1).getInitHeight();
+		int getInitHeight_at_pre2=getChar(2).getInitHeight();
+
+
 		super.step(c1, c2);
 		
 		//post-inv
@@ -118,11 +128,27 @@ public class EngineContract extends EngineDecorator {
 		
 		CharacterContract cc= new CharacterContract(getChar(1));
 		
-		cc.postStep(positionX1_at_pre, positionY1_at_pre, faceRight1_at_pre, c1,charbox_at_pre1,isTeching_at_pre1);
+		cc.postStep(positionX1_at_pre,
+				positionY1_at_pre,
+				faceRight1_at_pre,
+				c1,charbox_at_pre1,
+				isTeching_at_pre1,
+				isHitStunned_at_pre1,
+				isBlockStunned_at_pre1,
+				getHeight_at_pre1,
+				getInitHeight_at_pre1);
 		
 		//post:step(c1,c2)=getChar(2).step(c2)
 		cc=new CharacterContract(getChar(2));
-		cc.postStep(positionX2_at_pre, positionY2_at_pre, faceRight2_at_pre, c2,charbox_at_pre2,isTeching_at_pre2);
+		cc.postStep(positionX2_at_pre, 
+				positionY2_at_pre, 
+				faceRight2_at_pre, c2,
+				charbox_at_pre2,
+				isTeching_at_pre2,
+				isHitStunned_at_pre2,
+				isBlockStunned_at_pre2,
+				getHeight_at_pre2,
+				getInitHeight_at_pre2);
 		
 		
 	}

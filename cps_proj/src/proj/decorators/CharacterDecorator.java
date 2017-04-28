@@ -149,6 +149,12 @@ public class CharacterDecorator implements Character{
 		// TODO Auto-generated method stub
 		return delegate.isHitStunned();
 	}
+
+	@Override
+	public int getInitHeight() {
+		// TODO Auto-generated method stub
+		return delegate.getInitHeight();
+	}
 	
 	
 

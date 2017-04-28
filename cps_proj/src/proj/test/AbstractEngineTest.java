@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import proj.contract.PreconditionError;
 import proj.service.Character;
+import proj.service.Commande;
 import proj.service.Engine;
 import proj.service.Player;
 
@@ -37,12 +38,26 @@ public abstract class  AbstractEngineTest {
 			fail("testinitneg1: il aurait dû avoir une  PreconditionError");
 		}catch(PreconditionError p){}
 		
-		try{
+/*		try{
 			eng.init(500, 400, 20, p1, p1);
 			fail("testinitneg1: il aurait dû avoir une  PreconditionError");
-		}catch(PreconditionError p){}
+		}catch(PreconditionError p){}*/
 		
 	}
+	
+	@Test
+	public void teststeppreNeg(){
+		try{
+			eng.init(500, 400, 20, p1, p2);
+			eng.getChar(1).setLife(0);
+			eng.step(Commande.NEUTRAL, Commande.GUARD);
+			fail("testinitneg1: il aurait dû avoir une  PreconditionError");
+		}catch(PreconditionError p){
+			System.out.println(p.getMessage());
+		}
+		
+	}
+	
 
 
 

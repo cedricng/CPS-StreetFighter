@@ -6,7 +6,7 @@ import proj.service.Hitbox;
 import proj.service.RectHitbox;
 
 public class RectHitboxImpl implements RectHitbox {
-	
+
 	Rectangle r;
 
 	@Override
@@ -16,6 +16,7 @@ public class RectHitboxImpl implements RectHitbox {
 
 	@Override
 	public int getPositionY() {
+		
 		return -r.y+getHeight();
 	}
 
@@ -26,15 +27,15 @@ public class RectHitboxImpl implements RectHitbox {
 
 	@Override
 	public boolean collidesWith(Hitbox h) {
-		
-			RectHitbox rh=(RectHitbox)h;
-		
+
+		RectHitbox rh=(RectHitbox)h;
+
 		return !(getPositionX()+getWidth()<rh.getPositionX() 
 				||rh.getPositionX()+rh.getWidth()<getPositionX() 
 				|| getPositionY()+getWidth()<rh.getPositionY()
 				||rh.getPositionY()+rh.getWidth()<getPositionY())
 				;
-		
+
 	}
 
 	@Override
@@ -77,7 +78,14 @@ public class RectHitboxImpl implements RectHitbox {
 
 	@Override
 	public void resize(int h, int w) {
+		System.out.println(getPositionY());
+		System.out.println(r.y);
+		
 		r.setSize(w, h);
+		System.out.println(getPositionY());
+		System.out.println(r.y);
+
+
 
 	}
 

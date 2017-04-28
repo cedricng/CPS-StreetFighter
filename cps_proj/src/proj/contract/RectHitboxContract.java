@@ -28,16 +28,16 @@ public class RectHitboxContract extends RectHitboxDecorator {
 		boolean belongsTo_abs_at_pre = belongsTo(300, 0);
 		super.MoveTo(x,y);
 		checkInvariant();
-		/* Test du centre */
+	/*	 Test du centre 
 		if(! belongsTo(getPositionX(), getPositionY()) == belongsTo_centre_at_pre)
 		{throw new PostconditionError(" forall u,v belongsTo(u,v)=belongsTo(u-(x-getPositionX()), v-(y-getPositionY()))");}
-		/* Test du centre + 100 */
+		 Test du centre + 100 
 		if(! belongsTo(getPositionX() + 100, getPositionY() + 100) == belongsTo_centre_100_at_pre)
 		{throw new PostconditionError(" forall u,v belongsTo(u,v)=belongsTo(u-(x-getPositionX()), v-(y-getPositionY())");}
-		/* Test d�un point absolu */
+		 Test d�un point absolu 
 		if(! belongsTo(300 + (x - PositionX_at_pre), 0 + (y - PositionY_at_pre)) == belongsTo_abs_at_pre)
 		{throw new PostconditionError(" forall u,v belongsTo(u,v)=belongsTo(u-(x-getPositionX()), v-(y-getPositionY()))");}
-		
+		*/
 		//post: getPositionX()==x
 		if(! (getPositionX()==x)){
 			throw new PostconditionError("getPositionX()==x");

@@ -1,5 +1,5 @@
 package proj.service;
 
 public enum Commande {
-	LEFT,RIGHT,NEUTRAL,GUARD,PUNCH;
+	LEFT,RIGHT,NEUTRAL,GUARD,PUNCH,DOWN,UP;
 }

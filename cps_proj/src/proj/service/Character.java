@@ -18,6 +18,7 @@ public interface Character {
 	boolean techHasAlreadyHit();
 	boolean isBlockStunned();
 	boolean isHitStunned();
+	int getInitHeight();
 	//pre:!isTeching()
 	Tech getTech();
 	//pre :l>0 && s>0
@@ -68,11 +69,12 @@ public interface Character {
 	void switchSide();
 	
 	//pre:!dead()
-	//post:!isTeching@pre&& !isBlockStunned && !isHitStunned=> step(Commande.LEFT)=moveLeft() && step(Commande.LEFT)=>isBlocking()=false
-	//post:!isTeching@pre&& !isBlockStunned && !isHitStunned=> step (Commande.RIGHT)=moveRight() && step(Commande.RIGHT)=>isBlocking()=false
-	//POST:!isBlockStunned()=>step(Commande.NEUTRAL)=>isBlocking()=false
-	//post:!isTeching@pre&& !isHitStunned=> step(Commande.GUARD)=>isBlocking()==true
+	//post:!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=> step(Commande.LEFT)=moveLeft() && step(Commande.LEFT)=>isBlocking()=false
+	//post:!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=> step (Commande.RIGHT)=moveRight() && step(Commande.RIGHT)=>isBlocking()=false
+	//POST:!isBlockStunned@pre()=>step(Commande.NEUTRAL)=>isBlocking()=false
+	//post:!isTeching@pre&& !isHitStunned@pre=> step(Commande.GUARD)=>isBlocking()==true
 	//post:!isTeching@pre=>step(Commande.PUNCH)=startTech(new Punch());
+	//post:!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=> c=Commande.DOWN=>getHeight=getInitHeight@pre/2
 	void step(Commande c);
 	
 	//pre:!isTeching()

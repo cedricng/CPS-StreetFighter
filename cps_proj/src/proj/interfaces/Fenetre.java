@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import proj.contract.CharacterContract;
 import proj.contract.EngineContract;
+import proj.contract.InvariantError;
 import proj.contract.PlayerContract;
 import proj.contract.PostconditionError;
 import proj.impl.CharacterImpl;
@@ -45,9 +46,9 @@ public class Fenetre extends JFrame {
 
 		Contentpanel pan=(Contentpanel) f.getContentPane();
 		int i=0;
-		while(!pan.eng.isGameOver()){
+		while(true){
 			try {
-				Thread.sleep(600);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 
@@ -59,6 +60,10 @@ public class Fenetre extends JFrame {
 			}
 			catch(PostconditionError pe){
 				pe.printStackTrace();
+				
+			}
+			catch(InvariantError ie){
+				ie.printStackTrace();
 			}
 			i++;
 		}

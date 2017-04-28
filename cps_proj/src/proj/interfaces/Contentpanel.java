@@ -17,7 +17,7 @@ import proj.service.RectHitbox;
 
 public class Contentpanel extends JPanel {
 
-	
+
 	Commande c1=Commande.NEUTRAL;
 	Commande c2=Commande.NEUTRAL;
 	Engine eng;
@@ -60,7 +60,7 @@ public class Contentpanel extends JPanel {
 
 		@Override
 		public void keyTyped(KeyEvent e) {System.out.println("keyTyped");
-		
+
 		if(e.getKeyChar()=='q'){
 
 
@@ -74,7 +74,7 @@ public class Contentpanel extends JPanel {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 
 		}
-		
+
 		}
 
 		@Override
@@ -86,37 +86,53 @@ public class Contentpanel extends JPanel {
 		public void keyPressed(KeyEvent e) {System.out.println("keyPressed");
 
 		if(e.getKeyChar()=='q'){
-			
+
 			c1=Commande.LEFT;
 		}
 		if(e.getKeyChar()=='d'){
 			c1=Commande.RIGHT;
-			
+
 		}
 		if(e.getKeyChar()=='w'){
 			c1=Commande.GUARD;
-			
+
 		}
 		if(e.getKeyChar()=='c'){
 			c1=Commande.PUNCH;
-			
+
+		}
+		if(e.getKeyChar()=='s'){
+			c1=Commande.DOWN;
+
+		}
+		if(e.getKeyChar()=='z'){
+			c1=Commande.UP;
+
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			
+
 			c2=Commande.LEFT;
 
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			
+
 			c2=Commande.RIGHT;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
-			
+
 			c2=Commande.GUARD;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
-			
+
 			c2=Commande.PUNCH;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+
+			c2=Commande.DOWN;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+
+			c2=Commande.UP;
 		}
 		//repaint();
 		}
@@ -150,7 +166,6 @@ public class Contentpanel extends JPanel {
 		System.out.println("p2,x->"+eng.getChar(2).getPositionX());
 		g.fillRect(eng.getChar(1).getPositionX(), h-eng.getChar(1).getPositionY()-eng.getChar(1).getHeight(),eng.getChar(1).getWidth() , eng.getChar(1).getHeight());
 		if(eng.getChar(1).getTechHitbox()!=null){
-			System.out.println("nott nullllllllllllllllllllllllllllll");
 
 			g.fillRect(eng.getChar(1).getTechHitbox().getPositionX(),
 					h-eng.getChar(1).getTechHitbox().getPositionY()-eng.getChar(1).getHeight(),
@@ -161,15 +176,26 @@ public class Contentpanel extends JPanel {
 		g.setColor(Color.yellow);
 		g.fillRect(eng.getChar(2).getPositionX(), h-eng.getChar(2).getPositionY()-eng.getChar(2).getHeight(),eng.getChar(2).getWidth() , eng.getChar(2).getHeight());
 		if(eng.getChar(2).getTechHitbox()!=null){				
-			System.out.println("not nulllllllllllllllllllllllllll");
 
 			g.fillRect(eng.getChar(2).getTechHitbox().getPositionX(),
 					h-eng.getChar(2).getTechHitbox().getPositionY()-eng.getChar(2).getHeight(),
 					((RectHitbox)(eng.getChar(2).getTechHitbox())).getWidth(), 
 					((RectHitbox)(eng.getChar(2).getTechHitbox())).getHeight());
+			
+			if(eng.getChar(2).getLife()==0){
+				g.setColor(Color.white);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());g.setColor(Color.yellow);
+				g.fillRect(eng.getChar(2).getPositionX()-eng.getChar(2).getInitHeight(), h-eng.getChar(2).getPositionY()-eng.getChar(2).getHeight(), eng.getChar(2).getHeight(),eng.getChar(2).getWidth() );
+			}
+			if(eng.getChar(1).getLife()==0){
+				g.setColor(Color.white);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());g.setColor(Color.blue);
+				g.fillRect(eng.getChar(1).getPositionX()-eng.getChar(1).getInitHeight(), h-eng.getChar(1).getPositionY()-eng.getChar(1).getHeight(), eng.getChar(1).getHeight(),eng.getChar(1).getWidth() );
+			}
 		}
 
 	}
+	
 
 
 
