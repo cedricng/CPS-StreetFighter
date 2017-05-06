@@ -131,7 +131,7 @@ public interface Character {
 	
 	
 	//post:stunCounter()==bstun
-	//post:isBlocking()==isBlockStunned() && isBlocking()!=isHitStunned()
+	//post:blocking==isBlockStunned && blocking!=isHitStunned()
 	void stun(int bstun,boolean blocking);
 	
 	
