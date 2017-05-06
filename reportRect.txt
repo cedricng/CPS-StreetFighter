@@ -1,0 +1,10 @@
+Testsuite: proj.test.RectHitboxTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0,015 sec
+
+Testcase: testpreInitNeg took 0,003 sec
+Testcase: testpreResizePos took 0 sec
+Testcase: testpreResizeNeg took 0 sec
+Testcase: testpreInitPos took 0 sec
+Testcase: postmoveToPos took 0 sec
+Testcase: testpostInitPos took 0 sec
+Testcase: testpostResizePost took 0 sec

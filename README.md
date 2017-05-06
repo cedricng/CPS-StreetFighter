@@ -1,2 +1,0 @@
-# CPS-StreetFighter
-projet cps
