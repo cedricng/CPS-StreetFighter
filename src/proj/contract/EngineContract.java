@@ -123,6 +123,15 @@ public class EngineContract extends EngineDecorator {
 		int startFrameCounter_at_pre2=getChar(2).startFrameCounter();
 		int hitFrameCounter_at_pre2=getChar(2).hitFrameCounter();
 		int recoveryFrameCounter_at_pre2=getChar(2).recoveryFrameCounter();
+		int stunCounter_at_pre1=getChar(1).stunCounter();
+		int stunCounter_at_pre2=getChar(2).stunCounter();
+		int char1life_at_pre=getChar(1).getLife();
+		int char2life_at_pre=getChar(1).getLife();
+		boolean techHasAlreadyHit_at_pre1=getChar(1).techHasAlreadyHit();
+		boolean techHasAlreadyHit_at_pre2=getChar(2).techHasAlreadyHit();
+		boolean isBlocking_at_pre_1=getChar(1).isBlocking();
+		boolean isBlocking_at_pre_2=getChar(2).isBlocking();
+
 		super.step(c1, c2);
 		
 		//post-inv
@@ -143,7 +152,8 @@ public class EngineContract extends EngineDecorator {
 				isBlockStunned_at_pre1,
 				getHeight_at_pre1,
 				getInitHeight_at_pre1,isDown_at_pre1,startFrameCounter_at_pre1,
-				hitFrameCounter_at_pre1,recoveryFrameCounter_at_pre1);
+				hitFrameCounter_at_pre1,recoveryFrameCounter_at_pre1,stunCounter_at_pre1,
+				techHasAlreadyHit_at_pre1,char2life_at_pre,isBlocking_at_pre_2);
 		
 		//post:step(c1,c2)=getChar(2).step(c2)
 		cc=new CharacterContract(getChar(2));
@@ -157,7 +167,8 @@ public class EngineContract extends EngineDecorator {
 				getHeight_at_pre2,
 				getInitHeight_at_pre2,
 				isDown_at_pre2,startFrameCounter_at_pre2,
-				hitFrameCounter_at_pre2,recoveryFrameCounter_at_pre2);
+				hitFrameCounter_at_pre2,recoveryFrameCounter_at_pre2,stunCounter_at_pre2,
+				techHasAlreadyHit_at_pre2,char1life_at_pre,isBlocking_at_pre_2);
 		
 		
 	}

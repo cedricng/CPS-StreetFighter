@@ -1,6 +1,7 @@
 package proj.contract;
 
 import proj.decorators.CharacterDecorator;
+import proj.impl.Punch;
 import proj.impl.RectHitboxImpl;
 import proj.service.Character;
 import proj.service.Commande;
@@ -36,9 +37,14 @@ public class CharacterContract extends CharacterDecorator {
 			throw new InvariantError("inv:isBlockStunned =>isBlocking");
 
 		}
-	
-		
-		
+		//inv:stunCounter>0 <=> isBlockStunned || isHitStunned
+		if((stunCounter()>0)!=(isBlockStunned()||isHitStunned())){
+			throw new InvariantError("stunCounter>0 <=> isBlockStunned || isHitStunned");
+
+		}
+
+
+
 
 
 	}
@@ -167,6 +173,19 @@ public class CharacterContract extends CharacterDecorator {
 		int startFrameCounter_at_pre=startFrameCounter();
 		int hitFrameCounter_at_pre=hitFrameCounter();
 		int recoveryFrameCounter_at_pre=recoveryFrameCounter();
+		int stunCounter_at_pre=stunCounter();
+		boolean techHasAlreadyHit_at_pre=techHasAlreadyHit();
+		int opp_life_at_pre;
+		boolean opp_isBlocking_at_pre;
+		if(getNum()==1){
+			opp_life_at_pre=getEngine().getChar(2).getLife();
+			opp_isBlocking_at_pre=getEngine().getChar(2).isBlocking();
+		}
+		else{
+			opp_life_at_pre=getEngine().getChar(1).getLife();
+			opp_isBlocking_at_pre=getEngine().getChar(1).isBlocking();
+
+		}
 		//traitement
 		super.step(c);
 
@@ -180,14 +199,15 @@ public class CharacterContract extends CharacterDecorator {
 				isHitStunned_at_pre,
 				isBlockStunned_at_pre,getHeight_at_pre,
 				getInitHeight_at_pre,isDown_at_pre,
-				startFrameCounter_at_pre,hitFrameCounter_at_pre,recoveryFrameCounter_at_pre);
+				startFrameCounter_at_pre,hitFrameCounter_at_pre,recoveryFrameCounter_at_pre,
+				stunCounter_at_pre,techHasAlreadyHit_at_pre,opp_life_at_pre,opp_isBlocking_at_pre);
 
 	}
 	public void postMoveLeft(int positionX_at_pre, 
 			int positionY_at_pre,
 			boolean faceRight_at_pre, 
 			RectHitbox charbox_at_pre){
-		//post: exists i getEngine()@pre.getPlayer(i) != this && getCharBox().collidesWith(getPlayer(i).getCharBox)
+		//post: exists i getEngine()@pre.getChar(i) != this && getCharBox().collidesWith(getPlayer(i).getCharBox)
 		//=>getPositionX()@pre=getPositionX()
 		if(getNum()==2){
 			charbox_at_pre.MoveTo(positionX_at_pre-getSpeed(),positionY_at_pre);
@@ -211,8 +231,8 @@ public class CharacterContract extends CharacterDecorator {
 		}
 
 		//post: (getPositionX()@pre<=getSpeed() 
-		//&& (forall i getEngine().getPlayer(i) != this =>
-		//!(getCharBox().collidesWith(getCharBox(),getPlayer(i).getCharBox))))
+		//&& (forall i getEngine().getChar(i) != this =>
+		//!(getCharBox().collidesWith(getCharBox(),getChar(i).getCharBox))))
 		//=>getPositionX()==0
 		if(positionX_at_pre<=getSpeed() && 
 				getNum()==2 ){
@@ -240,8 +260,8 @@ public class CharacterContract extends CharacterDecorator {
 		}
 
 		//post:(getPositionX()@pre>getSpeed()
-		//&& (forall i getEngine().getPlayer(i) != this => 
-		//!(getCharBox().collidesWith(getCharBox(),getPlayer(i).getCharBox))))
+		//&& (forall i getEngine().getChar(i) != this => 
+		//!(getCharBox().collidesWith(getCharBox(),getChar(i).getCharBox))))
 		//=>getPositionX()==getPositionX@pre-getSpeed();
 		if(positionX_at_pre>getSpeed() && 
 				getNum()==2 ){
@@ -281,7 +301,7 @@ public class CharacterContract extends CharacterDecorator {
 	}
 	public void postMoveRight(int positionX_at_pre, int positionY_at_pre
 			,boolean faceRight_at_pre,RectHitbox charbox_at_pre){
-		//post: exists i getEngine()@pre.getPlayer(i) != this && getCharBox().collidesWith(getPlayer(i).getCharBox)
+		//post: exists i getEngine()@pre.getChar(i) != this && getCharBox().collidesWith(getChar(i).getCharBox)
 		//=>getPositionX()@pre=getPositionX()
 		if(getNum()==2 ){
 			charbox_at_pre.MoveTo(positionX_at_pre+getSpeed(),positionY_at_pre);
@@ -305,8 +325,8 @@ public class CharacterContract extends CharacterDecorator {
 		}
 
 		//post: (getPositionX()@pre>=getEngine.getWidth()-getSpeed() 
-		//&& (forall i getEngine().getPlayer(i) != this => 
-		//!(getCharBox().collidesWith(getCharBox(),getPlayer(i).getCharBox))))
+		//&& (forall i getEngine().getChar(i) != this => 
+		//!(getCharBox().collidesWith(getCharBox(),getChar(i).getCharBox))))
 		//=>getPositionX()==getEngine().getWidth()
 		if(positionX_at_pre>=getEngine().getWidth()-getSpeed() && 
 				getNum()==2){
@@ -333,8 +353,8 @@ public class CharacterContract extends CharacterDecorator {
 			}
 		}
 		//post:(getPositionX()@pre<getEngine.getWidth()-getSpeed() 
-		//&& (forall i getEngine().getPlayer(i) != this => !
-		//(getCharBox().collidesWith(getCharBox(),getPlayer(i).getCharBox))))
+		//&& (forall i getEngine().getChar(i) != this => !
+		//(getCharBox().collidesWith(getCharBox(),getChar(i).getCharBox))))
 		//=>getPositionX()==getPositionX@pre+getSpeed()
 		if(positionX_at_pre<getEngine().getWidth()-getSpeed() && 
 				getNum()==2){
@@ -383,30 +403,26 @@ public class CharacterContract extends CharacterDecorator {
 			boolean isDown_at_pre,
 			int startFrameCounter_at_pre,
 			int hitFrameCounter_at_pre,
-			int recoveryFrameCounter_at_pre
-			){
+			int recoveryFrameCounter_at_pre, int stunCounter_at_pre, boolean techHasAlreadyHit_at_pre,
+			int opp_life_at_pre,
+			boolean opp_isBlocking_at_pre){
 		//post:!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=> step(Commande.LEFT)=moveLeft() 
-		//&& c=Commande.LEFT=>!isBlocking()
+
 		if(!isTeching_at_pre &&! isBlockStunned_at_pre && !isHitStunned_at_pre){
 			if(c==Commande.LEFT){
 				postMoveLeft(positionX_at_pre, positionY_at_pre, faceRight_at_pre,charbox_at_pre);
-				if(isBlocking()){
-					throw new PostconditionError("!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre"
-							+ "=> step(Commande.LEFT)=moveLeft() "
-							+ "&& c=Commande.LEFT=>!isBlocking()");
-				}
+
+
+
 			}
 		}
 		//post:!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=> step (Commande.RIGHT)=moveRight() 
-		//&& c=Commande.RIGHT=>!isBlocking()
+
 		if(!isTeching_at_pre &&! isBlockStunned_at_pre && !isHitStunned_at_pre){
 			if(c==Commande.RIGHT){
 				postMoveRight(positionX_at_pre, positionY_at_pre, faceRight_at_pre,charbox_at_pre);
-				if(isBlocking()){
-					throw new PostconditionError("!isTeching@pre&& !isBlockStunned@pre && !isHitStunned@pre=>"
-							+ " step (Commande.RIGHT)=moveRight()"
-							+"&& c=Commande.RIGHT=>!isBlocking()");
-				}
+
+
 
 			}
 		}
@@ -435,10 +451,7 @@ public class CharacterContract extends CharacterDecorator {
 		//post:!isTeching@pre && !isHitStunned@pre &&!isBlockSunned@pre=>step(Commande.PUNCH)=startTech(new Punch());
 		if(!isTeching_at_pre && !isHitStunned_at_pre &&!isBlockStunned_at_pre){
 			if(c==Commande.PUNCH){
-				if(!isTeching()){
-					throw new PostconditionError("!isTeching@pre && !isHitStunned@pre &&!isBlockSunned@pre=>"
-							+ "step(Commande.PUNCH)=startTech(new Punch())");
-				}
+				postStartTech(new Punch());
 			}
 		}
 
@@ -454,10 +467,10 @@ public class CharacterContract extends CharacterDecorator {
 			}
 		}
 		//post:!isTeching@pre && !isBlockStunned@pre && !isHitStunned@pre && isDown@pre =>
-		//c=Commande.UP=>getHeight=getInitHeight
+		//c=Commande.UP=>getHeight=getInitHeight && !isDown
 		if(!isTeching_at_pre &&! isBlockStunned_at_pre &&!isHitStunned_at_pre && isDown_at_pre){
 			if(c==Commande.UP){
-				if(getHeight()!=getInitHeight() ){
+				if(getHeight()!=getInitHeight() || isDown()){
 					throw new PostconditionError("!isTeching@pre && !isBlockStunned@pre "
 							+ "&& !isHitStunned@pre && isDown@pre "
 							+ "=> c=Commande.UP=>getHeight=getInitHeight  "
@@ -477,9 +490,9 @@ public class CharacterContract extends CharacterDecorator {
 		//&&getTech().getHframe()>0 getTech().getRframe()>0
 		if(startFrameCounter_at_pre==0 && hitFrameCounter_at_pre>0){
 			if(hitFrameCounter()!=hitFrameCounter_at_pre-1 ||getTech()==null || getTechHitbox()==null 
-				||getTech().getDamage()<=0 
-				|| getTech().getBstun()<=0||getTech().getHstun()<=0  ||getTech().getSframe()<=0 
-				||getTech().getHframe()<=0||getTech().getRFrame()<=0){
+					||getTech().getDamage()<=0 
+					|| getTech().getBstun()<=0||getTech().getHstun()<=0  ||getTech().getSframe()<=0 
+					||getTech().getHframe()<=0||getTech().getRFrame()<=0){
 				throw new InvariantError("startFrameCounter@pre==0 && hitFrameCounter@pre>0 =>"
 						+ "hitFrameCounter==hitFrameCounter@pre-1 "
 						+ "&& getTech().getDamage()>0 && "
@@ -489,15 +502,46 @@ public class CharacterContract extends CharacterDecorator {
 			}
 		}
 
-		
-		
-		
+
+
+
 		//post:recoveryFrameCounter@pre>0 && hitFrameCounter@pre==0 =>
 		//recoveryFrameCounter==recoveryFrameCounter@pre-1 && getTech=null && getTechHitbox=null
 		if(recoveryFrameCounter_at_pre>0 && hitFrameCounter_at_pre==0){
 			if(recoveryFrameCounter()!=recoveryFrameCounter_at_pre-1 && getTech()!=null && getTechHitbox()!=null){
 				throw new PostconditionError("recoveryFrameCounter@pre>0 && hitFrameCounter@pre==0 =>"
 						+ "recoveryFrameCounter==recoveryFrameCounter@pre-1  ");
+			}
+		}
+
+		//post:stunCounter_at_pre>0=>stunCounter=stunCounter_at_pre-1
+		if(stunCounter_at_pre>0){
+			if(stunCounter()!=stunCounter_at_pre-1 ){
+				throw new PostconditionError("post:stunCounter_at_pre>0=>stunCounter=stunCounter_at_pre-1");
+			}
+		}
+		//post:exists i getEngine()@pre.getChar(i) != this && !techHasAlreadyHit@pre=>
+		//(techHasAlreadyHit=>getEngine.getChar(i).life<getEngine.getChar(i).life@pre)
+		if(getNum()==1){
+			if(getEngine().getChar(2)!=null && !techHasAlreadyHit_at_pre){
+				if(techHasAlreadyHit() &&!opp_isBlocking_at_pre){
+					if(getEngine().getChar(2).getLife()>=opp_life_at_pre){
+						throw new PostconditionError("exists i getEngine()@pre.getChar(i) != this && "
+								+ "!techHasAlreadyHit@pre=>"
+								+ "(techHasAlreadyHit=>getEngine.getChar(i).life<getEngine.getChar(i).life@pre)");
+					}
+				}
+			}
+		}
+		else{
+			if(getEngine().getChar(1)!=null && !techHasAlreadyHit_at_pre){
+				if(techHasAlreadyHit() && !opp_isBlocking_at_pre){
+					if(getEngine().getChar(1).getLife()>=opp_life_at_pre){
+						throw new PostconditionError("exists i getEngine()@pre.getChar(i) != this && "
+								+ "!techHasAlreadyHit@pre=>"
+								+ "(techHasAlreadyHit=>getEngine.getChar(i).life<getEngine.getChar(i).life@pre)");
+					}
+				}
 			}
 		}
 
@@ -516,10 +560,59 @@ public class CharacterContract extends CharacterDecorator {
 		//traitement
 		super.startTech(t);
 
+		//post-inv
+		checkInvariant();
+
+		//post-conditions
+		postStartTech(t);
+	}
+
+	public void postStartTech(Tech t) {
+
 		//post:isTeching
 		if(!isTeching()){
-			throw new PreconditionError("isTeching()");
+			throw new PostconditionError("isTeching()");
 		}
+		
+		//post:StartframeCounter==t.sframe-1
+		if(startFrameCounter()!=t.getSframe()-1){
+			throw new PostconditionError("StartframeCounter==t.sframe-1");
+
+		}
+		//post:HitframeCounter==t.hframe
+		if(hitFrameCounter()!=t.getHframe()){
+			throw new PostconditionError("HitframeCounter==t.hframe");
+
+		}
+		//post:RecoveryframeCounter==t.rframe
+		if(recoveryFrameCounter()!=t.getRFrame()){
+			throw new PostconditionError("recoveryframeCounter==t.rFrame");
+
+		}
+	}
+
+	@Override
+	public void stun(int bstun,boolean blocking){
+		//pre inv
+		checkInvariant();
+
+		//traitement
+		super.stun(bstun, blocking);
+
+		//post-inv
+		checkInvariant();
+
+		//post:stunCounter()==bstun
+		if(stunCounter()!=bstun){
+			throw new PostconditionError("stunCounter()==bstun");
+		}
+		
+		//post:isBlocking()==isBlockStunned() && isBlocking()!=isHitStunned()
+		if(blocking!=isBlockStunned() || blocking==isHitStunned()){
+			throw new PostconditionError("isBlocking()==isBlockStunned() && isBlocking()!=isHitStunned()");
+		}
+		
+		
 	}
 
 

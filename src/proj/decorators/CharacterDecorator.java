@@ -161,20 +161,22 @@ public class CharacterDecorator implements Character{
 
 	@Override
 	public int startFrameCounter() {
-		// TODO Auto-generated method stub
 		return delegate.startFrameCounter();
 	}
 
 	@Override
 	public int hitFrameCounter() {
-		// TODO Auto-generated method stub
 		return delegate.hitFrameCounter();
 	}
 
 	@Override
 	public int recoveryFrameCounter() {
-		// TODO Auto-generated method stub
 		return delegate.recoveryFrameCounter();
+	}
+
+	@Override
+	public int stunCounter() {
+		return delegate.stunCounter();
 	}
 	
 	

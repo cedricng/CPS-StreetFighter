@@ -176,10 +176,13 @@ public class CharacterImpl implements Character {
 			System.out.println("tsun");
 
 			tstun--;
+			if(tstun==0){
+				bstun=false;
+				hstun=false;
+			}
 		}
 		else{
-			bstun=false;
-			hstun=false;
+			
 			if(isTeching()){
 				System.out.println("isTeching");
 				if(sframe>0){
@@ -371,6 +374,11 @@ public class CharacterImpl implements Character {
 	@Override
 	public int recoveryFrameCounter() {
 		return rframe;
+	}
+
+	@Override
+	public int stunCounter() {
+		return tstun;
 	}
 
 }
